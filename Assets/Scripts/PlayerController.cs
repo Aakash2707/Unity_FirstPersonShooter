@@ -32,10 +32,13 @@ public class PlayerController : MonoBehaviour
     public Transform adsPoint,gunHolder;
     private Vector3 gunStartPosition;
     public float adsSpeed =2f;
-    
     public AudioSource playerWalk; 
-
     public GameObject muzzleFlash;
+
+    private float bounceAmount;
+    private bool bounce;
+
+
     private void Awake(){
         instance = this;
     }
@@ -100,8 +103,13 @@ public class PlayerController : MonoBehaviour
                 moveInput.y = jumpPower;
                 canDoubleJump = false;
             }
+            if(bounce)
+            {
+                bounce=false;
+                moveInput.y = bounceAmount;
+            }
             charCon.Move(moveInput* Time.deltaTime);
-            
+
             //camera controller 
             Vector2 mouseInput = new Vector2(Input.GetAxisRaw("Mouse X"),Input.GetAxisRaw("Mouse Y"))*mouseSensitivity;
             if(invertX){
@@ -208,5 +216,10 @@ public class PlayerController : MonoBehaviour
             currentGun = allGuns.Count -2;
             SwitchGun();
         }
+    }
+    public void Bounce(float bounceForce)
+    {
+        bounceAmount = bounceForce;
+        bounce = true;
     }
 }
